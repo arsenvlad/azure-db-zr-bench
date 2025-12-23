@@ -1,0 +1,3 @@
+"""Azure Database Zone Redundancy Benchmark Tool."""
+
+__version__ = "0.1.0"

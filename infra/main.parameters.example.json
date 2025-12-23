@@ -1,0 +1,39 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "location": {
+      "value": "centralus"
+    },
+    "adminUsername": {
+      "value": "benchadmin"
+    },
+    "adminPassword": {
+      "value": "REPLACE_WITH_SECURE_PASSWORD"
+    },
+    "sshPublicKey": {
+      "value": "REPLACE_WITH_YOUR_SSH_PUBLIC_KEY"
+    },
+    "vmSize": {
+      "value": "Standard_D4s_v5"
+    },
+    "postgresSkuName": {
+      "value": "Standard_D4ds_v5"
+    },
+    "postgresStorageGB": {
+      "value": 128
+    },
+    "mysqlSkuName": {
+      "value": "Standard_D4ds_v5"
+    },
+    "mysqlStorageGB": {
+      "value": 128
+    },
+    "sqlVCores": {
+      "value": 4
+    },
+    "sqlStorageGB": {
+      "value": 128
+    }
+  }
+}

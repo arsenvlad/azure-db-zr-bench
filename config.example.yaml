@@ -1,0 +1,94 @@
+# Azure DB Zone Redundancy Benchmark Configuration
+# 
+# This is an example configuration file. After deploying infrastructure,
+# replace the placeholder values with your actual database hostnames.
+#
+# Environment variables can be used with ${VAR_NAME} or ${VAR_NAME:-default}
+# Passwords should always use environment variables for security.
+#
+# Set the password before running:
+#   export DB_PASSWORD='your-secure-password'
+
+targets:
+  # PostgreSQL Flexible Server targets
+  pg-noha:
+    host: "pg-noha-SUFFIX.privatelink.postgres.database.azure.com"
+    port: 5432
+    database: "benchmark"
+    username: "benchadmin"
+    password: "${DB_PASSWORD}"
+    service: "postgres"
+    mode: "no-ha"
+    ssl_mode: "require"
+
+  pg-samezoneha:
+    host: "pg-szha-SUFFIX.privatelink.postgres.database.azure.com"
+    port: 5432
+    database: "benchmark"
+    username: "benchadmin"
+    password: "${DB_PASSWORD}"
+    service: "postgres"
+    mode: "samezone-ha"
+    ssl_mode: "require"
+
+  pg-crosszoneha:
+    host: "pg-czha-SUFFIX.privatelink.postgres.database.azure.com"
+    port: 5432
+    database: "benchmark"
+    username: "benchadmin"
+    password: "${DB_PASSWORD}"
+    service: "postgres"
+    mode: "crosszone-ha"
+    ssl_mode: "require"
+
+  # MySQL Flexible Server targets
+  mysql-noha:
+    host: "mysql-noha-SUFFIX.privatelink.mysql.database.azure.com"
+    port: 3306
+    database: "benchmark"
+    username: "benchadmin"
+    password: "${DB_PASSWORD}"
+    service: "mysql"
+    mode: "no-ha"
+    ssl_mode: "REQUIRED"
+
+  mysql-samezoneha:
+    host: "mysql-szha-SUFFIX.privatelink.mysql.database.azure.com"
+    port: 3306
+    database: "benchmark"
+    username: "benchadmin"
+    password: "${DB_PASSWORD}"
+    service: "mysql"
+    mode: "samezone-ha"
+    ssl_mode: "REQUIRED"
+
+  mysql-crosszoneha:
+    host: "mysql-czha-SUFFIX.privatelink.mysql.database.azure.com"
+    port: 3306
+    database: "benchmark"
+    username: "benchadmin"
+    password: "${DB_PASSWORD}"
+    service: "mysql"
+    mode: "crosszone-ha"
+    ssl_mode: "REQUIRED"
+
+  # Azure SQL Database targets
+  sqldb-nonzr:
+    host: "sql-zrbench-SUFFIX.privatelink.database.windows.net"
+    port: 1433
+    database: "sqldb-nonzr"
+    username: "benchadmin"
+    password: "${DB_PASSWORD}"
+    service: "sqldb"
+    mode: "non-zr"
+    driver: "ODBC Driver 18 for SQL Server"
+
+  sqldb-zr:
+    host: "sql-zrbench-SUFFIX.privatelink.database.windows.net"
+    port: 1433
+    database: "sqldb-zr"
+    username: "benchadmin"
+    password: "${DB_PASSWORD}"
+    service: "sqldb"
+    mode: "zr"
+    driver: "ODBC Driver 18 for SQL Server"
