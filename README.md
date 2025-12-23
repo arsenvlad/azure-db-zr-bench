@@ -137,6 +137,12 @@ This creates:
 - `results/report.md` - Markdown summary
 - `results/comparison.json` - Raw comparison data
 
+Copy the generated report file from the VM
+
+```bash
+scp -r benchadmin@172.202.40.105:/opt/benchmark/azure-db-zr-bench/results/ ./results-from-vm/
+```
+
 ### 8. Clean Up
 
 ```bash
