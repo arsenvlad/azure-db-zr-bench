@@ -27,7 +27,7 @@ param postgresSkuName string = 'Standard_D4ds_v5'
 param postgresStorageGB int = 128
 
 @description('MySQL SKU name')
-param mysqlSkuName string = 'Standard_D4ds_v5'
+param mysqlSkuName string = 'Standard_D4ads_v5'
 
 @description('MySQL storage size in GB')
 param mysqlStorageGB int = 128
