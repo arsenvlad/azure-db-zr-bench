@@ -89,7 +89,7 @@ Copy the generated config file to the VM:
 
 ```bash
 # From your local machine
-scp config.generated.yaml benchadmin@<VM_PUBLIC_IP>:/opt/benchmark/azure-db-zr-bench/config.yaml
+scp config.generated.yaml benchadmin@172.202.40.105:/opt/benchmark/azure-db-zr-bench/config.yaml
 ```
 
 ### 6. Run Benchmarks
@@ -110,8 +110,8 @@ azure-db-zr-bench list --config config.yaml
 # Run a single target
 azure-db-zr-bench run \
     --target pg-noha \
-    --concurrency 4 \
-    --duration 300
+    --concurrency 1 \
+    --duration 10
 
 # Run a full suite for PostgreSQL
 azure-db-zr-bench suite \

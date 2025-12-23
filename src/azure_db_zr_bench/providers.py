@@ -68,14 +68,7 @@ class PostgresProvider(DatabaseProvider):
     def connect(self) -> None:
         import psycopg
 
-        ssl_context = None
-        if self.config.ssl_mode == "require":
-            import ssl
-
-            ssl_context = ssl.create_default_context()
-            ssl_context.check_hostname = False
-            ssl_context.verify_mode = ssl.CERT_NONE
-
+        # Build connection string with SSL mode
         conninfo = (
             f"host={self.config.host} "
             f"port={self.config.port} "
@@ -84,10 +77,11 @@ class PostgresProvider(DatabaseProvider):
             f"password={self.config.password}"
         )
 
-        if ssl_context:
-            self._connection = psycopg.connect(conninfo, sslcontext=ssl_context)
-        else:
-            self._connection = psycopg.connect(conninfo)
+        # Add SSL mode if specified
+        if self.config.ssl_mode:
+            conninfo += f" sslmode={self.config.ssl_mode}"
+
+        self._connection = psycopg.connect(conninfo)
 
         # Set autocommit mode for explicit transaction control
         self._connection.autocommit = False
