@@ -3,6 +3,7 @@
 You are a coding agent. Build a Python project called `azure-db-zr-bench` that provisions Azure database infrastructure and runs write-focused benchmarks to measure the performance impact of enabling Zone Redundancy / cross-zone HA.
 
 High-level goal
+
 - Measure relative write performance between:
   - PostgreSQL Flexible Server: Non-HA vs SameZone-HA vs CrossZone-HA (zone redundant HA)
   - MySQL Flexible Server: Non-HA vs SameZone-HA vs CrossZone-HA (zone redundant HA)
@@ -11,6 +12,7 @@ High-level goal
 - The code should run from a test VM located in the same VNet as the databases in the `centralus` region (parameterize region)
 
 Repo structure requirements
+
 1) One GitHub repo: `azure-db-zr-bench`
 2) Include:
    - README with short instructions
@@ -21,7 +23,9 @@ Repo structure requirements
 
 Infrastructure requirements (Bicep)
 Deploy in `centralus`. Everything should be in one resource group.
+
 Networking
+
 - Create one VNet with at least 2 subnets:
   - `db-subnet` for DB private endpoints or delegated subnets where applicable
   - `vm-subnet` for the test VM
@@ -57,18 +61,22 @@ Create the following resources with predictable names to identify “mode”:
   - Use one logical server (or two if required by constraints) and two databases with clear naming.
 
 DB configuration
+
 - Use parameters for admin usernames/passwords (secure parameters).
 - Choose reasonable defaults for SKU/compute that are not small (avoid “too small to measure”), but keep cost controlled. Parameterize the sizes/SKUs.
 - Ensure that test VM is able to connect to the databases
 
 Python app requirements
+
 Core behavior
+
 - Provide a CLI entrypoint: `azure-db-zr-bench` (or `python -m azure_db_zr_bench`)
 - The CLI should be able to:
   1) List available deployed targets from a config file (not by discovering Azure resources)
   2) Run a write benchmark against a chosen target
 
 Config
+
 - Store connection info in a config file (YAML or JSON), with placeholders and examples:
   - host, port, dbname, username, password
   - service type: postgres/mysql/sqldb
@@ -76,6 +84,7 @@ Config
 - Do NOT hardcode secrets; allow env var overrides for passwords.
 
 Benchmark design (keep it simple and write-focused)
+
 - Focus on write operations since reads shouldn’t be materially impacted by ZR.
 - Implement one primary scenario: “OLTP write-heavy”
   - Create a table like:
@@ -98,6 +107,7 @@ Metrics to capture
 - Save results as JSON in `results/<timestamp>/<target>/result.json` and also a `summary.json`.
 
 Reporting
+
 - Generate a simple HTML report (static) and/or Markdown summary that compares:
   - Postgres: Non-HA vs SameZone-HA vs CrossZone-HA
   - MySQL: Non-HA vs SameZone-HA vs CrossZone-HA
@@ -106,6 +116,7 @@ Reporting
 - Keep charts minimal: throughput and p95 latency over time are enough.
 
 Implementation notes
+
 - Use Python with well-known libraries:
   - CLI: Typer (preferred) or Click/Argparse
   - DB drivers:
@@ -121,6 +132,7 @@ Implementation notes
 
 Developer experience / docs
 README must include:
+
 - Prereqs: Azure subscription, Bicep/Az CLI, region assumption centralus, cost warning
 - How to deploy infra:
   - `az deployment group create ...` or a script wrapping it
@@ -133,6 +145,7 @@ README must include:
 - Where results go and how to open the report
 
 Acceptance criteria
+
 - `infra/` can deploy: VNet + VM + the required DB variants in centralus (or another region provided).
 - From the VM, I can:
   - install/run the Python CLI
