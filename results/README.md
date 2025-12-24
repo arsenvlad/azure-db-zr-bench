@@ -3,7 +3,8 @@
 This directory contains benchmark results.
 
 Results are organized by timestamp and target:
-```
+
+```text
 results/
 └── 20241223_143022/
     ├── pg-noha/

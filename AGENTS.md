@@ -14,6 +14,7 @@ For *what* to build, see: `docs/agent-brief/v1-initial-build.md`.
 Zone Redundancy / cross-zone HA in Azure managed databases.
 
 Key principles:
+
 - Comparisons matter more than absolute numbers
 - Repeatability matters more than sophistication
 - Simplicity matters more than feature completeness
@@ -25,6 +26,7 @@ This is **not** a production-grade benchmarking framework.
 ## Scope boundaries (do not cross without justification)
 
 Allowed in v1:
+
 - Simple Python CLI
 - Explicit configuration via files
 - Write-heavy OLTP-style workloads
@@ -32,6 +34,7 @@ Allowed in v1:
 - Test-only infrastructure assumptions
 
 Out of scope for v1:
+
 - Auto-discovery of Azure resources
 - Long-running services or daemons
 - Web backends, APIs, or dashboards
@@ -73,6 +76,7 @@ Do not attempt to “optimize away” differences — differences are the point.
 - Favor explicit loops and clear control flow
 - Shared logic belongs in common modules; DB-specific logic belongs in providers
 - One obvious way to run a benchmark
+- MD files must follow lint rules of markdownlint (e.g., lists should be surrounded by blank lines, table column style [Table pipe is missing space to the right for style "compact"])
 
 If code feels clever, it’s probably wrong for this repo.
 
@@ -81,6 +85,7 @@ If code feels clever, it’s probably wrong for this repo.
 ## Output and results guarantees
 
 Every benchmark run must:
+
 - Produce machine-readable output (`result.json`, `summary.json`)
 - Include enough metadata to reproduce the run
 - Clearly label service, mode (non-HA / same-zone HA / cross-zone HA / ZR), and timestamp
@@ -114,6 +119,7 @@ Do not add complexity “just in case”.
 ## Decision tracking
 
 Non-trivial changes should be accompanied by:
+
 - An update to an existing ADR (architecture decision record), or
 - A new ADR under `docs/adr/`
 

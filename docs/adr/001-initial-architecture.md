@@ -14,6 +14,7 @@ We need to build a benchmarking tool to measure the relative write-performance i
 **Decision**: Use single-row INSERTs (batch_size=1 default) with explicit commits per operation.
 
 **Rationale**:
+
 - Single-row inserts more accurately measure synchronous replication overhead
 - Each commit must wait for the standby replica in ZR/HA modes
 - This makes ZR/HA impact more visible compared to batched operations where commit overhead is amortized
@@ -24,6 +25,7 @@ We need to build a benchmarking tool to measure the relative write-performance i
 **Decision**: Use an abstract base class `DatabaseProvider` with concrete implementations for each database type.
 
 **Rationale**:
+
 - Clean separation of database-specific connection/query logic
 - Consistent interface for the benchmark runner
 - Easy to add new database types in the future
@@ -33,6 +35,7 @@ We need to build a benchmarking tool to measure the relative write-performance i
 **Decision**: Use VNet integration with delegated subnets for PostgreSQL and MySQL Flexible Servers, and Private Endpoint for Azure SQL.
 
 **Rationale**:
+
 - PostgreSQL and MySQL Flexible Servers support (and prefer) delegated subnet deployment
 - Azure SQL requires Private Endpoint for VNet connectivity
 - All databases accessible only from within the VNet
@@ -42,6 +45,7 @@ We need to build a benchmarking tool to measure the relative write-performance i
 **Decision**: Use YAML configuration files with `${VAR}` syntax for environment variable substitution.
 
 **Rationale**:
+
 - YAML is human-readable and well-supported
 - Environment variables keep secrets out of config files
 - Pattern `${VAR:-default}` allows optional variables with defaults
@@ -51,6 +55,7 @@ We need to build a benchmarking tool to measure the relative write-performance i
 **Decision**: Capture both time-series data (per-second throughput/latency) and overall percentile statistics.
 
 **Rationale**:
+
 - Time-series shows performance stability over time
 - Percentiles (P50/P95/P99) are standard for latency reporting
 - Both are useful for different analysis needs
@@ -60,6 +65,7 @@ We need to build a benchmarking tool to measure the relative write-performance i
 **Decision**: Generate static HTML reports using Plotly.js for interactive charts.
 
 **Rationale**:
+
 - Self-contained HTML files (Plotly loaded from CDN)
 - Interactive charts for exploring data
 - No server required to view reports
@@ -70,6 +76,7 @@ We need to build a benchmarking tool to measure the relative write-performance i
 **Decision**: Use Python's `ThreadPoolExecutor` with one database connection per worker thread.
 
 **Rationale**:
+
 - Simple and effective for I/O-bound database operations
 - Avoids connection pool contention issues
 - Each thread has its own connection lifecycle
@@ -80,6 +87,7 @@ We need to build a benchmarking tool to measure the relative write-performance i
 **Decision**: Include a configurable warmup period (default 30s) that is excluded from metrics.
 
 **Rationale**:
+
 - Allows connection establishment, JIT compilation, and caching to stabilize
 - Results represent steady-state performance
 - Warmup duration is clearly documented in output
@@ -87,12 +95,14 @@ We need to build a benchmarking tool to measure the relative write-performance i
 ## Consequences
 
 ### Positive
+
 - Clear separation of concerns in code structure
 - Repeatable benchmarks with explicit configuration
 - Results include all metadata for reproducibility
 - Interactive reports for data exploration
 
 ### Negative
+
 - Thread-based concurrency limits scalability beyond ~64 workers (sufficient for this use case)
 - Single-row inserts may not represent all real-world workloads
 - Static HTML reports require internet for Plotly CDN (could embed if needed)

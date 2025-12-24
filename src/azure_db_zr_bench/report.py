@@ -495,28 +495,27 @@ This report compares write performance across different HA/ZR modes for Azure ma
 ### Concurrency: {{ concurrency }}
 
 | Mode | Throughput (w/s) | P50 (ms) | P95 (ms) | P99 (ms) | Errors | Throughput Δ | P95 Δ |
-|------|-----------------|----------|----------|----------|--------|--------------|-------|
-{% for mode, result in mode_data.items() %}
+| ---- | ---------------- | -------- | -------- | -------- | ------ | ------------ | ----- |
+{% for mode, result in mode_data.items() -%}
 | {{ mode }} | {{ "%.2f"|format(result.summary.throughput_wps) }} | {{ "%.2f"|format(result.summary.latency_p50_ms) }} | {{ "%.2f"|format(result.summary.latency_p95_ms) }} | {{ "%.2f"|format(result.summary.latency_p99_ms) }} | {{ result.summary.error_count }} | {% if comparisons[service][concurrency][mode] is defined %}{{ "%+.1f%%"|format(comparisons[service][concurrency][mode].throughput_delta_pct) }}{% else %}baseline{% endif %} | {% if comparisons[service][concurrency][mode] is defined %}{{ "%+.1f%%"|format(comparisons[service][concurrency][mode].latency_p95_delta_pct) }}{% else %}baseline{% endif %} |
 {% endfor %}
-
 {% endfor %}
 {% endfor %}
 
 ## Key Findings
-
 {% for service, service_comparisons in comparisons.items() %}
+
 ### {{ service_names[service] }}
-
 {% for concurrency, mode_comparisons in service_comparisons.items() %}
-**Concurrency {{ concurrency }}:**
-{% for mode, comp in mode_comparisons.items() %}
-- **{{ mode }}** vs baseline: Throughput {{ "%+.1f%%"|format(comp.throughput_delta_pct) }}, P95 latency {{ "%+.1f%%"|format(comp.latency_p95_delta_pct) }}
-{% endfor %}
-{% endfor %}
-{% endfor %}
 
+**Concurrency {{ concurrency }}:**
+{% for mode, comp in mode_comparisons.items() -%}
+- **{{ mode }}** vs baseline: Throughput {{ "%+.1f%%"|format(comp.throughput_delta_pct) }}, P95 latency {{ "%+.1f%%"|format(comp.latency_p95_delta_pct) }}
+{% endfor -%}
+{% endfor -%}
+{% endfor %}
 ---
+
 *Note: Negative throughput delta indicates slower performance. Positive latency delta indicates higher latency.*
 """
 

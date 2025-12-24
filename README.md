@@ -58,6 +58,7 @@ DB_PASSWORD="YourSecureP@ssw0rd123!"  # Min 12 chars, complexity required
 ```
 
 The script will:
+
 - Create a resource group
 - Deploy VNet, VM, and all database instances
 - Generate a `config.generated.yaml` file with connection details
@@ -133,6 +134,7 @@ azure-db-zr-bench report --results results/
 ```
 
 This creates:
+
 - `results/report.html` - Interactive HTML report with charts
 - `results/report.md` - Markdown summary
 - `results/comparison.json` - Raw comparison data
@@ -172,6 +174,7 @@ azure-db-zr-bench run \
 ```
 
 Options:
+
 - `--target, -t`: Target name from config file (required)
 - `--config, -c`: Path to config file (default: config.yaml)
 - `--concurrency, -n`: Number of concurrent workers (default: 4)
@@ -192,6 +195,7 @@ azure-db-zr-bench suite \
 ```
 
 Options:
+
 - `--service, -s`: Service type (postgres, mysql, sqldb, all) (required)
 - `--concurrency, -n`: Comma-separated concurrency levels (default: 1,4,16)
 
@@ -221,6 +225,7 @@ targets:
 ```
 
 Environment variable syntax:
+
 - `${VAR_NAME}` - Required variable
 - `${VAR_NAME:-default}` - Variable with default value
 
@@ -231,6 +236,7 @@ Environment variable syntax:
 The benchmark runs a **write-heavy OLTP** workload:
 
 1. Creates a table:
+
    ```sql
    CREATE TABLE benchmark_writes (
        id BIGINT AUTO_INCREMENT PRIMARY KEY,
@@ -247,6 +253,7 @@ The benchmark runs a **write-heavy OLTP** workload:
 ### Metrics
 
 For each run:
+
 - **Throughput**: Writes per second
 - **Latency**: P50, P95, P99 in milliseconds
 - **Errors**: Count and rate
@@ -254,6 +261,7 @@ For each run:
 ### Output
 
 Results are saved to `results/<timestamp>/<target>/`:
+
 - `result.json` - Full result with time series
 - `summary.json` - Condensed metrics
 - `latencies.json` - Raw latency samples for histogram
@@ -272,6 +280,7 @@ To ensure fair comparisons, **all resources are pinned to the same availability 
 This eliminates network latency variance between the client (VM) and different database servers. Without zone pinning, the VM might randomly land in a different zone than some database primaries, adding cross-zone network latency that would skew the ZR/HA comparison.
 
 **Customizing zones**: If Zone 1 has capacity constraints, you can change the zones during deployment:
+
 ```bash
 az deployment group create ... \
     --parameters primaryZone='2' standbyZone='3'
@@ -279,7 +288,7 @@ az deployment group create ... \
 
 ### Network Architecture
 
-```
+```text
 VNet (10.0.0.0/16)
 ├── snet-vm (10.0.1.0/24)      - Test VM
 ├── snet-db (10.0.2.0/24)      - PostgreSQL (delegated subnet)
@@ -290,7 +299,7 @@ VNet (10.0.0.0/16)
 ### Database Instances
 
 | Service | Name Pattern | HA Mode | Zone |
-|---------|--------------|---------|------|
+| -------- | -------------- | --------- | ------ |
 | PostgreSQL | pg-noha-* | Disabled | primaryZone |
 | PostgreSQL | pg-szha-* | SameZone | primaryZone |
 | PostgreSQL | pg-czha-* | ZoneRedundant | primaryZone → standbyZone |
@@ -302,7 +311,7 @@ VNet (10.0.0.0/16)
 
 ## Project Structure
 
-```
+```text
 azure-db-zr-bench/
 ├── infra/                      # Bicep infrastructure
 │   ├── main.bicep
@@ -329,6 +338,7 @@ azure-db-zr-bench/
 ### Connection Issues
 
 1. **From VM, verify connectivity**:
+
    ```bash
    # PostgreSQL
    psql "host=pg-noha-xxx.privatelink.postgres.database.azure.com port=5432 dbname=benchmark user=benchadmin password=xxx sslmode=require"
@@ -341,6 +351,7 @@ azure-db-zr-bench/
    ```
 
 2. **Check DNS resolution**:
+
    ```bash
    nslookup pg-noha-xxx.privatelink.postgres.database.azure.com
    ```
