@@ -140,7 +140,7 @@ This creates:
 Copy the generated report file from the VM
 
 ```bash
-scp -r benchadmin@172.202.40.105:/opt/benchmark/azure-db-zr-bench/results/ ./results-from-vm/
+scp -r benchadmin@172.202.40.105:/opt/benchmark/azure-db-zr-bench/results/ ./results/results-from-vm/
 ```
 
 ### 8. Clean Up
@@ -260,6 +260,23 @@ Results are saved to `results/<timestamp>/<target>/`:
 
 ## Infrastructure Details
 
+### Zone Pinning
+
+To ensure fair comparisons, **all resources are pinned to the same availability zone** by default:
+
+- **VM**: Deployed in `primaryZone` (default: Zone 1)
+- **All PostgreSQL servers**: Primary in `primaryZone`
+- **All MySQL servers**: Primary in `primaryZone`
+- **Cross-zone HA standbys**: Deployed in `standbyZone` (default: Zone 2)
+
+This eliminates network latency variance between the client (VM) and different database servers. Without zone pinning, the VM might randomly land in a different zone than some database primaries, adding cross-zone network latency that would skew the ZR/HA comparison.
+
+**Customizing zones**: If Zone 1 has capacity constraints, you can change the zones during deployment:
+```bash
+az deployment group create ... \
+    --parameters primaryZone='2' standbyZone='3'
+```
+
 ### Network Architecture
 
 ```
@@ -272,16 +289,16 @@ VNet (10.0.0.0/16)
 
 ### Database Instances
 
-| Service | Name Pattern | HA Mode |
-|---------|--------------|---------|
-| PostgreSQL | pg-noha-* | Disabled |
-| PostgreSQL | pg-szha-* | SameZone |
-| PostgreSQL | pg-czha-* | ZoneRedundant |
-| MySQL | mysql-noha-* | Disabled |
-| MySQL | mysql-szha-* | SameZone |
-| MySQL | mysql-czha-* | ZoneRedundant |
-| Azure SQL | sqldb-nonzr | zoneRedundant=false |
-| Azure SQL | sqldb-zr | zoneRedundant=true |
+| Service | Name Pattern | HA Mode | Zone |
+|---------|--------------|---------|------|
+| PostgreSQL | pg-noha-* | Disabled | primaryZone |
+| PostgreSQL | pg-szha-* | SameZone | primaryZone |
+| PostgreSQL | pg-czha-* | ZoneRedundant | primaryZone → standbyZone |
+| MySQL | mysql-noha-* | Disabled | primaryZone |
+| MySQL | mysql-szha-* | SameZone | primaryZone |
+| MySQL | mysql-czha-* | ZoneRedundant | primaryZone → standbyZone |
+| Azure SQL | sqldb-nonzr | zoneRedundant=false | N/A |
+| Azure SQL | sqldb-zr | zoneRedundant=true | N/A |
 
 ## Project Structure
 

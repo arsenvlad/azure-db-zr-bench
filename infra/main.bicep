@@ -38,6 +38,12 @@ param sqlVCores int = 4
 @description('Azure SQL storage size in GB')
 param sqlStorageGB int = 128
 
+@description('Primary availability zone for VM and all database servers (1, 2, or 3)')
+param primaryZone string = '1'
+
+@description('Standby availability zone for cross-zone HA databases')
+param standbyZone string = '2'
+
 // Variables
 var vnetName = 'vnet-zrbench-${nameSuffix}'
 var vmSubnetName = 'snet-vm'
@@ -325,6 +331,7 @@ runcmd:
 resource vm 'Microsoft.Compute/virtualMachines@2024-03-01' = {
   name: vmName
   location: location
+  zones: [primaryZone]
   identity: {
     type: 'UserAssigned'
     userAssignedIdentities: {
@@ -388,6 +395,7 @@ resource pgNonHa 'Microsoft.DBforPostgreSQL/flexibleServers@2023-12-01-preview' 
     version: '16'
     administratorLogin: adminUsername
     administratorLoginPassword: adminPassword
+    availabilityZone: primaryZone
     storage: {
       storageSizeGB: postgresStorageGB
     }
@@ -420,7 +428,7 @@ resource pgSameZoneHa 'Microsoft.DBforPostgreSQL/flexibleServers@2023-12-01-prev
     version: '16'
     administratorLogin: adminUsername
     administratorLoginPassword: adminPassword
-    availabilityZone: '1'
+    availabilityZone: primaryZone
     storage: {
       storageSizeGB: postgresStorageGB
     }
@@ -454,7 +462,7 @@ resource pgCrossZoneHa 'Microsoft.DBforPostgreSQL/flexibleServers@2023-12-01-pre
     version: '16'
     administratorLogin: adminUsername
     administratorLoginPassword: adminPassword
-    availabilityZone: '1'
+    availabilityZone: primaryZone
     storage: {
       storageSizeGB: postgresStorageGB
     }
@@ -464,7 +472,7 @@ resource pgCrossZoneHa 'Microsoft.DBforPostgreSQL/flexibleServers@2023-12-01-pre
     }
     highAvailability: {
       mode: 'ZoneRedundant'
-      standbyAvailabilityZone: '2'
+      standbyAvailabilityZone: standbyZone
     }
     network: {
       delegatedSubnetResourceId: '${vnet.id}/subnets/${dbSubnetName}'
@@ -517,6 +525,7 @@ resource mysqlNonHa 'Microsoft.DBforMySQL/flexibleServers@2023-12-30' = {
     version: '8.0.21'
     administratorLogin: adminUsername
     administratorLoginPassword: adminPassword
+    availabilityZone: primaryZone
     storage: {
       storageSizeGB: mysqlStorageGB
     }
@@ -549,7 +558,7 @@ resource mysqlSameZoneHa 'Microsoft.DBforMySQL/flexibleServers@2023-12-30' = {
     version: '8.0.21'
     administratorLogin: adminUsername
     administratorLoginPassword: adminPassword
-    availabilityZone: '1'
+    availabilityZone: primaryZone
     storage: {
       storageSizeGB: mysqlStorageGB
     }
@@ -583,7 +592,7 @@ resource mysqlCrossZoneHa 'Microsoft.DBforMySQL/flexibleServers@2023-12-30' = {
     version: '8.0.21'
     administratorLogin: adminUsername
     administratorLoginPassword: adminPassword
-    availabilityZone: '1'
+    availabilityZone: primaryZone
     storage: {
       storageSizeGB: mysqlStorageGB
     }
@@ -593,7 +602,7 @@ resource mysqlCrossZoneHa 'Microsoft.DBforMySQL/flexibleServers@2023-12-30' = {
     }
     highAvailability: {
       mode: 'ZoneRedundant'
-      standbyAvailabilityZone: '2'
+      standbyAvailabilityZone: standbyZone
     }
     network: {
       delegatedSubnetResourceId: '${vnet.id}/subnets/snet-mysql'
