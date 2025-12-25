@@ -90,7 +90,7 @@ Copy the generated config file to the VM:
 
 ```bash
 # From your local machine
-scp config.generated.yaml benchadmin@172.202.40.105:/opt/benchmark/azure-db-zr-bench/config.yaml
+scp config.generated.yaml benchadmin@172.202.25.111:/opt/benchmark/azure-db-zr-bench/config.yaml
 ```
 
 ### 6. Run Benchmarks
@@ -123,7 +123,7 @@ azure-db-zr-bench suite \
 # Run all services
 azure-db-zr-bench suite \
     --service all \
-    --concurrency 1,4,16 \
+    --concurrency 1,4,16,32 \
     --duration 300
 ```
 
