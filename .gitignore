@@ -197,8 +197,8 @@ cython_debug/
 # Project-specific: Results directory (benchmark outputs)
 results/*
 !results/README.md
-!results/report.html
-!results/report.md
+!results/report*.html
+!results/report*.md
 
 # Project-specific: Local config with secrets
 config.local.yaml
