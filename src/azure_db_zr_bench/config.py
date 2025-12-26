@@ -79,7 +79,9 @@ def load_config(config_path: Path) -> Dict[str, BenchmarkTarget]:
     with open(config_path, "r") as f:
         config = yaml.safe_load(f)
 
-    if not config or "targets" not in config:
+    if not config:
+        raise ValueError("Config file is empty or contains invalid YAML")
+    if "targets" not in config:
         raise ValueError("Config file must contain a 'targets' section")
 
     targets = {}

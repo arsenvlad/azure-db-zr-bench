@@ -293,8 +293,7 @@ class SQLDBProvider(DatabaseProvider):
             if batch_size == 1:
                 cursor.execute(
                     "INSERT INTO benchmark_writes (tenant_id, payload) VALUES (?, ?)",
-                    random.randint(1, 1000),
-                    self.generate_payload(),
+                    (random.randint(1, 1000), self.generate_payload()),
                 )
             else:
                 data = [

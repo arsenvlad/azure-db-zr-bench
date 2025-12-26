@@ -38,10 +38,10 @@ param sqlVCores int = 4
 @description('Azure SQL storage size in GB')
 param sqlStorageGB int = 128
 
-@description('Primary availability zone for VM and all database servers (1, 2, or 3)')
+@description('Primary availability zone for VM and all database servers (1, 2, or 3). Note: Not all Azure regions support availability zones. Use `az vm list-skus --location <region> --zone` to verify zone support.')
 param primaryZone string = '1'
 
-@description('Standby availability zone for cross-zone HA databases')
+@description('Standby availability zone for cross-zone HA databases. Must differ from primaryZone.')
 param standbyZone string = '2'
 
 // Variables
@@ -522,7 +522,7 @@ resource mysqlNonHa 'Microsoft.DBforMySQL/flexibleServers@2023-12-30' = {
     tier: 'GeneralPurpose'
   }
   properties: {
-    version: '8.0.21'
+    version: '8.0.39'
     administratorLogin: adminUsername
     administratorLoginPassword: adminPassword
     availabilityZone: primaryZone
@@ -555,7 +555,7 @@ resource mysqlSameZoneHa 'Microsoft.DBforMySQL/flexibleServers@2023-12-30' = {
     tier: 'GeneralPurpose'
   }
   properties: {
-    version: '8.0.21'
+    version: '8.0.39'
     administratorLogin: adminUsername
     administratorLoginPassword: adminPassword
     availabilityZone: primaryZone
@@ -589,7 +589,7 @@ resource mysqlCrossZoneHa 'Microsoft.DBforMySQL/flexibleServers@2023-12-30' = {
     tier: 'GeneralPurpose'
   }
   properties: {
-    version: '8.0.21'
+    version: '8.0.39'
     administratorLogin: adminUsername
     administratorLoginPassword: adminPassword
     availabilityZone: primaryZone
