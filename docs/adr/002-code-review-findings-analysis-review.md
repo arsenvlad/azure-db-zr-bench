@@ -60,6 +60,7 @@ def create_benchmark_table(self) -> None:
 **Reasoning for Disagreement:**
 
 While I agree with the *practical* assessment that:
+
 - These are one-shot setup methods
 - Failures abort the entire run
 - The performance-critical path (`write_batch`) is correctly protected
@@ -158,6 +159,7 @@ version: '8.0.39'
 **My Assessment:** **AGREE**
 
 **Reasoning:** This aligns perfectly with the project philosophy:
+
 - "This is **not** a production-grade benchmarking framework" (AGENTS.md)
 - Power-user tool for technical users
 - Adding artificial limits would restrict valid edge-case testing
@@ -195,6 +197,7 @@ if "targets" not in config:
 **Verification:** Code at `providers.py:72-84` builds a connection string with password included.
 
 **Reasoning:** The ADR's analysis is correct:
+
 - psycopg doesn't log connection strings by default
 - The password is in memory either way (keyword args vs string)
 - The code doesn't have custom exception handling that would log the connection string
@@ -244,6 +247,7 @@ if existing is None or result.start_time > existing.start_time:
 **My Assessment:** **AGREE**
 
 **Reasoning:** The distinction between:
+
 - `no-ha` (machine identifier in config)
 - `Non-HA` (human-readable display text)
 
@@ -276,6 +280,7 @@ def generate_payload(self, size: int = 512) -> str:
 **My Assessment:** **AGREE**
 
 **Reasoning:** Azure validates SSH keys during deployment, providing clear error messages. Client-side validation would:
+
 - Add code complexity
 - Provide no meaningful benefit (deployment fails early regardless)
 - Duplicate validation logic that Azure already has
